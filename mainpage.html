@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Info by YS</title>
+    <style>
+        /* Starry background */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #001F3F; /* Deep blue background */
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Needed for absolute positioning of stars */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        /* Stars */
+        .stars {
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/LeJ5Thy.png') repeat;
+            position: absolute;
+            z-index: -1;
+            opacity: 0.5; /* Make stars more subtle */
+        }
+
+        /* Title */
+        h1 {
+            font-size: 3rem;
+            margin: 20px;
+            color: #00d1ff; /* Bright cyan color */
+        }
+
+        /* Menu buttons */
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px; /* Spacing above buttons */
+        }
+        
+        .menu button {
+            margin: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            background-color: #005577; /* Dark blue background */
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition for hover effects */
+        }
+        
+        .menu button:hover {
+            background-color: #0099cc; /* Lighter blue on hover */
+            transform: scale(1.05); /* Slightly grow the button on hover */
+        }
+
+        /* Planet info display */
+        .info {
+            text-align: center;
+            margin-top: 20px;
+            display: none;  /* Hide by default */
+        }
+        
+        .info img {
+            max-width: 250px; /* Slightly larger images */
+            margin: 20px 0;
+            border-radius: 10px; /* Round the corners of images */
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .menu button {
+                font-size: 1rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Starry background -->
+    <div class="stars"></div>
+
+    <!-- Title -->
+    <h1>Planet Info By YS</h1>
+
+    <!-- Planet Menu -->
+    <div class="menu">
+        <button onclick="showInfo('Sun')">Sun</button>
+        <button onclick="showInfo('Mercury')">Mercury</button>
+        <button onclick="showInfo('Venus')">Venus</button>
+        <button onclick="showInfo('Earth')">Earth</button>
+        <button onclick="showInfo('Mars')">Mars</button>
+        <button onclick="showInfo('Jupiter')">Jupiter</button>
+        <button onclick="showInfo('Saturn')">Saturn</button>
+        <button onclick="showInfo('Uranus')">Uranus</button>
+        <button onclick="showInfo('Neptune')">Neptune</button>
+    </div>
+
+    <!-- Planet Info Section -->
+    <div class="info" id="info">
+        <h2 id="planet-name"></h2>
+        <p id="planet-description"></p>
+        <img id="planet-image" src="" alt="Planet Image">
+        <ul id="planet-details"></ul>
+    </div>
+
+    <script>
+        // Planet data
+        const planetData = {
+            Sun: {
+                description: "The Sun is the star at the center of our solar system.",
+                image: "https://images.pexels.com/photos/87611/sun-fireball-solar-flare-sunlight-87611.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                details: { "Diameter": "1.39 million km", "Surface Temperature": "5,500°C" }
+            },
+            Mercury: {
+                description: "Mercury is the smallest planet and closest to the Sun.",
+                image: "https://space-facts.com/wp-content/uploads/mercury.png",
+                details: { "Diameter": "4,880 km", "Orbit Period": "88 days" }
+            },
+            Venus: {
+                description: "Venus is the second planet and similar in size to Earth.",
+                image: "https://s7d1.scene7.com/is/image/CENODS/09911-feature3-venus?$responsive$&wid=700&qlt=90,0&resMode=sharp2",
+                details: { "Diameter": "12,104 km", "Orbit Period": "225 days" }
+            },
+            Earth: {
+                description: "Earth is the only known planet to support life.",
+                image: "https://images.pexels.com/photos/87651/earth-blue-planet-globe-planet-87651.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                details: { "Diameter": "12,742 km", "Orbit Period": "365 days", "Moons": "1" }
+            },
+            Mars: {
+                description: "Mars is known as the Red Planet.",
+                image: "https://www.airedalesprings.co.uk/wp-content/uploads/2016/08/mars-iStock_000026519382_Large-1024x766.jpg",
+                details: { "Diameter": "6,779 km", "Orbit Period": "687 days", "Moons": "2" }
+            },
+            Jupiter: {
+                description: "Jupiter is the largest planet in our solar system.",
+                image: "https://space-facts.com/wp-content/uploads/jupiter.png",
+                details: { "Diameter": "139,820 km", "Moons": "79" }
+            },
+            Saturn: {
+                description: "Saturn is famous for its beautiful ring system.",
+                image: "https://space-facts.com/wp-content/uploads/saturn.png",
+                details: { "Diameter": "116,460 km", "Moons": "83" }
+            },
+            Uranus: {
+                description: "Uranus has a blue-green color due to its atmosphere.",
+                image: "https://media.gettyimages.com/id/1124685694/fr/vectoriel/illustration-of-uranus.jpg?s=612x612&w=gi&k=20&c=nGRTWVpEoYH5vZqRQ1FLMAqsiKyowIj-UG9tsjxlPg8=",
+                details: { "Diameter": "50,724 km", "Moons": "27" }
+            },
+            Neptune: {
+                description: "Neptune is the farthest planet from the Sun.",
+                image: "https://space-facts.com/wp-content/uploads/neptune.png",
+                details: { "Diameter": "49,244 km", "Moons": "14" }
+            }
+        };
+
+        // Show planet info
+        function showInfo(planet) {
+            const infoDiv = document.getElementById('info');
+            const name = document.getElementById('planet-name');
+            const description = document.getElementById('planet-description');
+            const details = document.getElementById('planet-details');
+            const image = document.getElementById('planet-image');
+
+            name.textContent = planet;
+            description.textContent = planetData[planet].description;
+            image.src = planetData[planet].image;
+
+            details.innerHTML = '';
+            for (const [key, value] of Object.entries(planetData[planet].details)) {
+                details.innerHTML += `<li>${key}: ${value}</li>`; // Use backticks for template literals
+            }
+
+            infoDiv.style.display = 'block';  // Show the info section
+        }
+    </script>
+
+    <h10> Version: 0.1 </h10> <!-- Using h10 for version display -->
+</body>
+</html>
